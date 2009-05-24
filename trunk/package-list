@@ -1,6 +1,0 @@
-com.textmagic.sms
-com.textmagic.sms.core.invoker
-com.textmagic.sms.core.parsing
-com.textmagic.sms.dto
-com.textmagic.sms.exception
-com.textmagic.sms.util
