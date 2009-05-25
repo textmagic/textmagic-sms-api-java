@@ -141,7 +141,8 @@ Lets revisit send.jsp page to add the link
             SentMessage message = service.send (messageText, phone);
 	    System.out.println (message.toString());
 %>
-            Message with <%= message.toString() %> was successfully send. <a href="#" onClick="NewWin=window.open('check_state.jsp?id=<%= message.getId()%>', 'NewWin');">check delivery state</a>
+            Message with <%= message.toString() %> was successfully send. 
+            <a href="#" onClick="NewWin=window.open('check_state.jsp?id=<%= message.getId()%>', 'NewWin');">check delivery state</a>
 <%            
         } catch (ServiceException ex) {
 }}}
@@ -159,12 +160,84 @@ Please, read api javadocs for more detailed information
 
 = Retrieving inbound sms messages = 
 
-Once you start using !TextMagic for sending messages, you may realize that in some cases you need feedback from your recipients. TextMagic allow your recipients to reply to the messages they get. And even to send messages to your [http://api.textmagic.com/https-api/sender-id sender id]
+Once you start using !TextMagic for sending messages, you may realize that in some cases you need feedback from your recipients. TextMagic allow your recipients to reply to the messages they get. And even to send messages to your [http://api.textmagic.com/https-api/sender-id sender id]. This inbound messages are stored on TextMagic server and can be accessed in your account administration page or with help of java api.
 
+Two main api calls provides ability to manipulate your inbound sms messages stored on server
 
-= Details =
+{{{
+List<ReceivedMessage> messages = service.receive();
+}}}
+for retrieving messages and
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+{{{
+service.deleteReply(messageId);
+}}}
+for deleting message message from server.
+
+Note: we don't cover bulk api methods that operates with sets of messages
+
+Lets write receive.jsp page that will retreive all inbound message from server and represent them in a simple table. In addition, lets add facility to remove exact messages from server (note: removed messages can not be restored)
+
+{{{
+
+<%
+    TextMagicMessageService service = new TextMagicMessageService ("YOUR_USERNAME", "YOUR_PASSWORD");
+
+// this part is responsible for removing messages from server
+
+    String messageId = request.getParameter( "remove" );
+    if(messageId != null) {
+        try{
+            service.deleteReply(new Long(messageId));
+%>
+            <font color="green">Message id = <%= messageId %> successfully deleted</font>
+<%
+        } catch (ServiceException ex) {
+%>
+            <font color="red">Message id = <%= messageId %> was not deleted. Reason : <%= ex.getMessage() %></font>
+
+<%            
+        }
+    }
+%>
+<br/>
+<h2>List of inbound sms messages</h2>
+
+<%
+//this part is responsible for retrieving messages from server and represent them in a table
+        try { 
+            List<ReceivedMessage> messages = service.receive();
+            if(!messages.isEmpty()) {
+%>
+            <table width="100%" style="border: solid 1px">
+            <tr>
+                <th width="20%" > Sender phone </th> <th width="50%"> Message Text </th> <th width="20%"> Received </th> <th width="10%"></th>
+            </tr>
+<%                
+                for(ReceivedMessage message : messages) {
+			System.out.println(message.getReceivedDate());
+			System.out.println(System.currentTimeMillis());
+%>  
+                    <tr><td><%= message.getSenderPhone() %></td> <td><%= message.getText() %></td><td><%= message.getReceivedDate() %></td><td><a href="receive.jsp?remove=<%= message.getId() %>">Delete</a></td></tr>
+<%
+                }
+%>
+	    </table>
+<%
+            }
+	} catch (ServiceException ex) {
+%>
+            <font color="red">Couldn't receve inbound messages. Reason : <%= ex.getMessage() %></font>
+<%		
+	}
+%>
+
+}}}
+
+= Tutorials example =
+
+Here we provide sample application, pakaged in standart java web application archive.
+
+As far as it contains only jsp pages, no separate sources are provided.
+
+After deploying application into web container (tomcat, jetty, glassfish, etc..), one should change in dummy TextMagic account username and password values with yours real information in receive.jsp, check_state.jsp and send.jsp pages.
