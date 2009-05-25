@@ -1,12 +1,14 @@
 #summary TextMagic java api tutorial
+#labels textmagic,tutorial
 
 = Introduction =
 
-This tutorial is designed to provide a basic overview of how to use !TextMagic java api. When you have completed the tutorial you will have written a simple web-application that sends and receives sms messages through !TextMagic Sms Gateway.
+This tutorial is designed to provide a basic overview of how to use !TextMagic java api. When you have completed the tutorial you will have written a simple web-application that sends and receives sms messages through !TextMagic Sms Gateway. 
+You can also download working web application package at the end of the tutorial.
 
 = Getting started =
 
-First of all you need to create account on [https://www.textmagic.com/app/wt/account/api/cmd/password !TextMagic]
+First of all you need to create account on [https://www.textmagic.com/app/wt/account/api/cmd/password TextMagic]
 
 Then you need to download 
  * [http://code.google.com/p/textmagic-sms-api-java/downloads/list textmagic-sms-api.jar] 
@@ -15,14 +17,14 @@ and its dependencies:
  * [http://repo1.maven.org/maven2/org/json/json/20090211/json-20090211.jar org.json JSON parsing library]
  * [http://repo1.maven.org/maven2/commons-logging/commons-logging/1.1/commons-logging-1.1.jar Apache Commons Logging]
  * [http://repo1.maven.org/maven2/commons-codec/commons-codec/1.2/commons-codec-1.2.jar Apache Commons Codec]
-The !TextMagic java api requires jdk 1.5 and above.
+The !TextMagic java api requires java version 1.5 or above.
 
 = Instantiating !TextMagicMessageService =
 
 By default the constructor of !TextMagicMessageService requires 2 parameters: your !TextMagic account username and password.
 
 {{{
-TextMagicMessageService service = new TextMagicMessageService ("you_username", "your_password");
+TextMagicMessageService service = new TextMagicMessageService ("your_username", "your_password");
 }}}
 
 This creates thread-safe instance of the service facade.
@@ -36,9 +38,9 @@ The most common used method for sending message to one destination number is
 SentMessage message = service.send("text", "9991234567");
 }}}
 
-Lets write jsp page for sending sms messages containing 2 form fields: destination number and message text to be sent. Lets name it "sent.jsp"
+Lets write jsp page for sending sms messages containing 2 form fields: destination number and message text to be sent. Lets name it "send.jsp"
 
-NOTE: The all examples in tutorial do contain neccessary headers and import statements. Please download full working example archive at the end of this tutorial
+NOTE: All examples in the tutorial do not contain neccessary headers and import statements. Please download full working example archive at the end of this tutorial
 
 {{{
 <h2>Sending Message Example</h2>
@@ -70,20 +72,20 @@ NOTE: The all examples in tutorial do contain neccessary headers and import stat
         </form>
 }}}
 
-The code is quite obvious: the form submits the form to the same jsp page, and java code gets these http parameters and calls TextMagicMessageService send method.
+The code is quite obvious: the form submits the two parameters to the same jsp page, and java code gets these http parameters and calls TextMagicMessageService send method.
 
-= Checking your TextMagic account balance =
+= Checking your !TextMagic account balance =
 
-Sometimes it is required to know beforehand whether you can send messages or can't.
+Sometimes it is required to know beforehand whether you can send messages or can not.
 For example, if you don't have enough credits on your balance, you can assume that your sending requests would fail.
 
-TextMagic api provides convinient way to check your balance current state
+!TextMagic api provides convinient way to check your balance current state
 
 {{{
  java.math.BigDecimal balance = service.account();
 }}}
 
-Lets add to out send.jsp page underline string with current balance:
+Lets add to our send.jsp page underline string with current balance:
 
 {{{
         ...
@@ -99,17 +101,17 @@ Yes, that simple it is.
 
 = Checking sent message delivery status =
 
-After you sent message to TextMagic, the message would not get to the recipient at the same instant.
-The operator server can be overloaded and delivering can take some time, the recipient handset can be turned off or even recipient phone number can be wrong and not-existing one.
+After you sent message to !TextMagic server, the message would not get to the recipient at the same instant.
+Some operators server can be overloaded and delivering can take some time, the recipients handset can be turned off or even recipients phone number can be wrong and not-existing one.
 
-To check whether you message(or messages) is successfully delivered or delivering is in progress or delivering failed, the following code can be used 
+To check whether you message(or messages) is successfully delivered, or delivering is in progress, or delivering  is failed, the following code can be used 
 
 {{{
 MessageStatus status = service.messageStatus (id);
 }}}
-where id - is the id of SentMessage object you got from send call.
+where id - is the id of !SentMessage object you got from send call.
 
-Lets write simple check_state.jsp page, that will receive http get "id" parameter and will call TextMagic to check sent message  status:
+Lets write simple check_state.jsp page, that will receive http get "id" parameter and call !TextMagic to check the message delivery status:
 
 {{{
 <h2>Message Delivery State</h2>
@@ -133,9 +135,9 @@ Lets write simple check_state.jsp page, that will receive http get "id" paramete
 %>
 }}}
 
-Now, we need to provide a link to this page, wich will provide appropriate message id to requests.
+Now, we need a link to this page, wich will provide appropriate message id parameter to requests.
 
-Lets revisit send.jsp page to add the link
+Lets revisit send.jsp page to add this link
 {{{
         try { 
             SentMessage message = service.send (messageText, phone);
@@ -147,7 +149,7 @@ Lets revisit send.jsp page to add the link
         } catch (ServiceException ex) {
 }}}
 
-JavaScript function call to "window.open" is used just to show delivering status in separate window. This can be easily replaces this classic link 
+!JavaScript function call "window.open" is used just to show delivering status in separate window. This can be easily replaces this classic link 
 
 {{{
 
@@ -155,14 +157,14 @@ JavaScript function call to "window.open" is used just to show delivering status
 
 }}}
 
-This is the end of the first part of the tutoril. We didn't cover bulk operations, providing you ability to sent the same message to a set of recipients and check delivery status. 
-Please, read api javadocs for more detailed information
+This is the end of the first part of the tutorial. We didn't cover bulk operations, providing you ability to sent the same message to a set of recipients and check delivery statuses. 
+Please, read api javadocs for more detailed information.
 
 = Retrieving inbound sms messages = 
 
-Once you start using !TextMagic for sending messages, you may realize that in some cases you need feedback from your recipients. TextMagic allow your recipients to reply to the messages they get. And even to send messages to your [http://api.textmagic.com/https-api/sender-id sender id]. This inbound messages are stored on TextMagic server and can be accessed in your account administration page or with help of java api.
+Once you start using !TextMagic for sending messages, you may realize that in some cases you need feedback from your recipients. !TextMagic allows your recipients to reply to the messages they get. And even to send messages to your [http://api.textmagic.com/https-api/sender-id sender id]. This inbound messages are stored on !TextMagic server and can be accessed in your account administration page or with help of java api.
 
-Two main api calls provides ability to manipulate your inbound sms messages stored on server
+Two main api calls provides ability to manipulate your inbound sms messages stored on server:
 
 {{{
 List<ReceivedMessage> messages = service.receive();
@@ -234,10 +236,12 @@ Lets write receive.jsp page that will retreive all inbound message from server a
 
 }}}
 
-= Tutorials example =
+= Complete working example =
+
+[http://textmagic-sms-api-java.googlecode.com/files/demo.war Download]
 
 Here we provide sample application, pakaged in standart java web application archive.
 
 As far as it contains only jsp pages, no separate sources are provided.
 
-After deploying application into web container (tomcat, jetty, glassfish, etc..), one should change in dummy TextMagic account username and password values with yours real information in receive.jsp, check_state.jsp and send.jsp pages.
+After deploying application into web container (tomcat, jetty, glassfish, etc..), one should change dummy TextMagic account username and password values with yours real information in receive.jsp, check_state.jsp and send.jsp pages.
