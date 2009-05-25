@@ -1,4 +1,4 @@
-#summary !TextMagic java api tutorial
+#summary TextMagic java api tutorial
 
 = Introduction =
 
@@ -14,7 +14,7 @@ and its dependencies:
  * [http://repo1.maven.org/maven2/commons-httpclient/commons-httpclient/3.1/commons-httpclient-3.1.jar Apache Commons http-client]
  * [http://repo1.maven.org/maven2/org/json/json/20090211/json-20090211.jar org.json JSON parsing library]
  * [http://repo1.maven.org/maven2/commons-logging/commons-logging/1.1/commons-logging-1.1.jar Apache Commons Logging]
-
+ * [http://repo1.maven.org/maven2/commons-codec/commons-codec/1.2/commons-codec-1.2.jar Apache Commons Codec]
 The !TextMagic java api requires jdk 1.5 and above.
 
 = Instantiating !TextMagicMessageService =
@@ -33,12 +33,56 @@ The api provides set of convinient methods for sending sms messages (please refe
 The most common used method for sending message to one destination number is
 
 {{{
-SentMessage message = service.send("9991234567", "text");
+SentMessage message = service.send("text", "9991234567");
 }}}
 
 Lets write jsp page for sending sms messages containing 2 form fields: destination number and message text to be sent.
 
 {{{
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+
+<%@page import="com.textmagic.sms.TextMagicMessageService"%>
+<%@page import="com.textmagic.sms.dto.SentMessage"%>
+<%@page import="com.textmagic.sms.exception.ServiceException"%>
+
+
+<html>
+<head>
+<title>Sending message</title>
+
+</head>
+<body>
+
+<h2>Sending Message Example</h2>
+<%
+    TextMagicMessageService service = new TextMagicMessageService ("YOUR_LOGIN", "YOUR_PASSWORD");
+    request.setCharacterEncoding("UTF-8");
+    String phone = request.getParameter( "destination" );
+    String messageText = request.getParameter( "message" );
+    if ( phone != null && messageText != null) {
+	System.out.println(messageText);
+        try { 
+            SentMessage message = service.send (messageText, phone);
+	    System.out.println (message.toString());
+%>
+            Message with <%= message.toString() %> was successfully send.
+<%            
+        } catch (ServiceException ex) {
+%>
+            <font color="red">Cant send message. Reason: <%= ex.getMessage() %> </font>
+<%
+        }
+    }
+%>
+
+        <form action="send.jsp" method="POST">
+        <table><tr><td>Destination:</td><td><input type="text" name="destination"/></td></tr>
+        <tr><td>Message:</td><td><textarea style="width:400px; height:150px" name="message"></textarea></td></tr>
+	<tr><td></td><td><input type="Submit" value="Send"/><br/></td></tr>
+        </table>
+        </form>
+</body>
+</html>
 
 
 }}}
