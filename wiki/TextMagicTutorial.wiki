@@ -1,12 +1,12 @@
-#summary TextMagic java api tutorial
+#summary !TextMagic java api tutorial
 
 = Introduction =
 
-This tutorial is designed to provide a basic overview of how to use TextMagic java api. When you have completed the tutorial you will have written a simple web-application that sends and receives sms messages through TextMagic Sms Gateway.
+This tutorial is designed to provide a basic overview of how to use !TextMagic java api. When you have completed the tutorial you will have written a simple web-application that sends and receives sms messages through !TextMagic Sms Gateway.
 
 = Getting started =
 
-First of all you need to create account on [https://www.textmagic.com/app/wt/account/api/cmd/password TextMagic]
+First of all you need to create account on [https://www.textmagic.com/app/wt/account/api/cmd/password !TextMagic]
 
 Then you need to download 
  * [http://code.google.com/p/textmagic-sms-api-java/downloads/list textmagic-sms-api.jar] 
@@ -15,6 +15,17 @@ and its dependencies:
  * [http://repo1.maven.org/maven2/org/json/json/20090211/json-20090211.jar org.json JSON parsing library]
  * [http://repo1.maven.org/maven2/commons-logging/commons-logging/1.1/commons-logging-1.1.jar Apache Commons Logging]
 
+The !TextMagic java api requires jdk 1.5 and above.
+
+= Instantiating !TextMagicMessageService =
+
+By default the constructor of !TextMagicMessageService requires 2 parameters: your !TextMagic account username and password.
+
+{{{
+TextMagicMessageService service = new TextMagicMessageService ("you_username", "your_password");
+}}}
+
+This creates thread-safe instance of the service facade.
 
 = Details =
 
