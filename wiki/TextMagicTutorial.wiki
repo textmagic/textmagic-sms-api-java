@@ -131,21 +131,36 @@ Lets write simple check_state.jsp page, that will receive http get "id" paramete
         }
     }
 %>
+}}}
 
 Now, we need to provide a link to this page, wich will provide appropriate message id to requests.
+
 Lets revisit send.jsp page to add the link
 {{{
         try { 
             SentMessage message = service.send (messageText, phone);
 	    System.out.println (message.toString());
 %>
-            *Message with <%= message.toString() %> was successfully send. <a href="#" onClick="NewWin=window.open('check_state.jsp?id=<%= message.getId()%>', 'NewWin','toolbar=no,status=no,width=400,height=250,top=200,left=400');">check delivery state</a>*
+            Message with <%= message.toString() %> was successfully send. <a href="#" onClick="NewWin=window.open('check_state.jsp?id=<%= message.getId()%>', 'NewWin');">check delivery state</a>
 <%            
         } catch (ServiceException ex) {
+}}}
+
+JavaScript function call to "window.open" is used just to show delivering status in separate window. This can be easily replaces this classic link 
+
+{{{
+
+<a href="#" onClick="check_state.jsp?id=<%= message.getId()%">check delivery state</a>
 
 }}}
 
-}}}
+This is the end of the first part of the tutoril. We didn't cover bulk operations, providing you ability to sent the same message to a set of recipients and check delivery status. 
+Please, read api javadocs for more detailed information
+
+= Retrieving inbound sms messages = 
+
+Once you start using !TextMagic for sending messages, you may realize that in some cases you need feedback from your recipients. TextMagic allow your recipients to reply to the messages they get. And even to send messages to your [http://api.textmagic.com/https-api/sender-id sender id]
+
 
 = Details =
 
