@@ -36,23 +36,11 @@ The most common used method for sending message to one destination number is
 SentMessage message = service.send("text", "9991234567");
 }}}
 
-Lets write jsp page for sending sms messages containing 2 form fields: destination number and message text to be sent.
+Lets write jsp page for sending sms messages containing 2 form fields: destination number and message text to be sent. 
+
+NOTE: The example below doesn't contain neccessary headers and import statements. Please download full working example archive at the end of this tutorial
 
 {{{
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-
-<%@page import="com.textmagic.sms.TextMagicMessageService"%>
-<%@page import="com.textmagic.sms.dto.SentMessage"%>
-<%@page import="com.textmagic.sms.exception.ServiceException"%>
-
-
-<html>
-<head>
-<title>Sending message</title>
-
-</head>
-<body>
-
 <h2>Sending Message Example</h2>
 <%
     TextMagicMessageService service = new TextMagicMessageService ("YOUR_LOGIN", "YOUR_PASSWORD");
@@ -81,10 +69,6 @@ Lets write jsp page for sending sms messages containing 2 form fields: destinati
 	<tr><td></td><td><input type="Submit" value="Send"/><br/></td></tr>
         </table>
         </form>
-</body>
-</html>
-
-
 }}}
 
 = Details =
