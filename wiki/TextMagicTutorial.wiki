@@ -36,15 +36,14 @@ The most common used method for sending message to one destination number is
 SentMessage message = service.send("text", "9991234567");
 }}}
 
-Lets write jsp page for sending sms messages containing 2 form fields: destination number and message text to be sent. 
+Lets write jsp page for sending sms messages containing 2 form fields: destination number and message text to be sent. Lets name it "sent.jsp"
 
-NOTE: The example below doesn't contain neccessary headers and import statements. Please download full working example archive at the end of this tutorial
+NOTE: The all examples in tutorial do contain neccessary headers and import statements. Please download full working example archive at the end of this tutorial
 
 {{{
 <h2>Sending Message Example</h2>
 <%
     TextMagicMessageService service = new TextMagicMessageService ("YOUR_LOGIN", "YOUR_PASSWORD");
-    request.setCharacterEncoding("UTF-8");
     String phone = request.getParameter( "destination" );
     String messageText = request.getParameter( "message" );
     if ( phone != null && messageText != null) {
@@ -69,6 +68,70 @@ NOTE: The example below doesn't contain neccessary headers and import statements
 	<tr><td></td><td><input type="Submit" value="Send"/><br/></td></tr>
         </table>
         </form>
+}}}
+
+The code is quite obvious: the form submits the form to the same jsp page, and java code gets these http parameters and calls TextMagicMessageService send method.
+
+= Checking your TextMagic account balance =
+
+Sometimes it is required to know beforehand whether you can send messages or can't.
+For example, if you don't have enough credits on your balance, you can assume that your sending requests would fail.
+
+TextMagic api provides convinient way to check your balance current state
+
+{{{
+ java.math.BigDecimal balance = service.account();
+}}}
+
+Lets add to out send.jsp page underline string with current balance:
+
+{{{
+        ...
+        </form>
+	<br/>
+	<p>
+	Current balance : <%= service.account().toString() %>
+	</p>
+
+}}}
+
+Yes, that simple it is.
+
+= Checking sent message delivery status =
+
+After you sent message to TextMagic, it is not gets to the recipient at the same instant.
+The operator server can be overloaded and delivering can take some time, the recipient handset can be turned off or even recipient phone number can be wrong and not-existing one.
+
+To check whether you message(or messages) is successfully delivered or delivering is in progress or delivering failes, the following code can be used 
+
+{{{
+MessageStatus status = service.messageStatus (id);
+}}}
+where id - is the id of SentMessage object you got from send call.
+
+Lets write simple check_state.jsp page, that will receive http get "id" parameter and will call TextMagic to check sent message  status:
+
+{{{
+<h2>Message Delivery State</h2>
+<%
+
+    TextMagicMessageService service = new TextMagicMessageService ("YOUR_USERNAME", "YOUR_PASSWORD");
+    Long id = new Long(request.getParameter("id"));
+    if ( id != null) {
+        try { 
+            MessageStatus status = service.messageStatus (id);
+%>
+            Message Text : <%= status.getMessage().getText() %> <br/>
+            Status: <%= status.getDeliveryState().getDescription() %>
+<%            
+        } catch (ServiceException ex) {
+%>
+            <font color="red">Cant receive status Reason: <%= ex.getMessage() %> </font>
+<%
+        }
+    }
+%>
+
 }}}
 
 = Details =
