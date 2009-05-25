@@ -1,0 +1,24 @@
+#summary TextMagic java api tutorial
+
+= Introduction =
+
+This tutorial is designed to provide a basic overview of how to use TextMagic java api. When you have completed the tutorial you will have written a simple web-application that sends and receives sms messages through TextMagic Sms Gateway.
+
+= Getting started =
+
+First of all you need to create account on [https://www.textmagic.com/app/wt/account/api/cmd/password TextMagic]
+
+Then you need to download 
+ * [http://code.google.com/p/textmagic-sms-api-java/downloads/list textmagic-sms-api.jar] 
+and its dependencies:
+ * [http://repo1.maven.org/maven2/commons-httpclient/commons-httpclient/3.1/commons-httpclient-3.1.jar Apache Commons http-client]
+ * [http://repo1.maven.org/maven2/org/json/json/20090211/json-20090211.jar org.json JSON parsing library]
+ * [http://repo1.maven.org/maven2/commons-logging/commons-logging/1.1/commons-logging-1.1.jar Apache Commons Logging]
+
+
+= Details =
+
+Add your content here.  Format your content with:
+  * Text in *bold* or _italic_
+  * Headings, paragraphs, and lists
+  * Automatic links to other wiki pages
