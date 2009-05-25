@@ -99,10 +99,10 @@ Yes, that simple it is.
 
 = Checking sent message delivery status =
 
-After you sent message to TextMagic, it is not gets to the recipient at the same instant.
+After you sent message to TextMagic, the message would not get to the recipient at the same instant.
 The operator server can be overloaded and delivering can take some time, the recipient handset can be turned off or even recipient phone number can be wrong and not-existing one.
 
-To check whether you message(or messages) is successfully delivered or delivering is in progress or delivering failes, the following code can be used 
+To check whether you message(or messages) is successfully delivered or delivering is in progress or delivering failed, the following code can be used 
 
 {{{
 MessageStatus status = service.messageStatus (id);
@@ -131,6 +131,19 @@ Lets write simple check_state.jsp page, that will receive http get "id" paramete
         }
     }
 %>
+
+Now, we need to provide a link to this page, wich will provide appropriate message id to requests.
+Lets revisit send.jsp page to add the link
+{{{
+        try { 
+            SentMessage message = service.send (messageText, phone);
+	    System.out.println (message.toString());
+%>
+            *Message with <%= message.toString() %> was successfully send. <a href="#" onClick="NewWin=window.open('check_state.jsp?id=<%= message.getId()%>', 'NewWin','toolbar=no,status=no,width=400,height=250,top=200,left=400');">check delivery state</a>*
+<%            
+        } catch (ServiceException ex) {
+
+}}}
 
 }}}
 
