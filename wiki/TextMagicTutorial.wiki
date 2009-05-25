@@ -27,6 +27,18 @@ TextMagicMessageService service = new TextMagicMessageService ("you_username", "
 
 This creates thread-safe instance of the service facade.
 
+= Sending Messages =
+
+The api provides set of convinient methods for sending sms messages (please refer to javadoc for complete specification).
+The most common used method for sending message to one number is
+
+{{{
+SentMessage message = service.send("9991234567", "text");
+}}}
+
+Lets write jsp page for sending sms messages containing 2 form fields destination number and message text to be sent.
+
+
 = Details =
 
 Add your content here.  Format your content with:
