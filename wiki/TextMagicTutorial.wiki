@@ -240,7 +240,7 @@ Lets write receive.jsp page that will retreive all inbound message from server a
 
 [http://textmagic-sms-api-java.googlecode.com/files/demo.war Download]
 
-Here we provide sample application, pakaged in standart java web application archive.
+Here we provide sample application, packaged in standart java web application archive.
 
 As far as it contains only jsp pages, no separate sources are provided.
 
