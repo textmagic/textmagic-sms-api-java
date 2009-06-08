@@ -31,7 +31,7 @@ This creates thread-safe instance of the service facade.
 
 = Sending Messages =
 
-The api provides set of convinient methods for sending sms messages (please refer to javadoc for complete specification).
+The api provides set of convenient methods for sending sms messages (please refer to javadoc for complete specification).
 The most common used method for sending message to one destination number is
 
 {{{
@@ -79,7 +79,7 @@ The code is quite obvious: the form submits the two parameters to the same jsp p
 Sometimes it is required to know beforehand whether you can send messages or can not.
 For example, if you don't have enough credits on your balance, you can assume that your sending requests would fail.
 
-!TextMagic api provides convinient way to check your balance current state
+!TextMagic api provides convenient way to check your balance current state
 
 {{{
  java.math.BigDecimal balance = service.account();
