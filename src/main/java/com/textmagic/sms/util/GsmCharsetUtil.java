@@ -5,13 +5,12 @@ package com.textmagic.sms.util;
  * GSM 03.38 character set
  *
  * @author Rafael Bagmanov
- * TODO: profile this and refactor if perfomance will be poor
  */
 public class GsmCharsetUtil {
     public static final String chars = "@£$¥èéùìòÇ\nØø\rÅåΔ_ΦΓΛΩΠΨΣΘΞ\t\f^{}\\\\[~]|€ÆæßÉ !\"#¤%&'()*+,-./0123456789:;<=>?¡ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÑÜ§¿abcdefghijklmnopqrstuvwxyzäöñüà";
 
     /**
-     * Indecates whether provided character belongs to GSM 03.38 character set
+     * Indicates whether provided character belongs to GSM 03.38 character set
      *
      * @param character
      * @return true - belongs, false - not
@@ -21,7 +20,7 @@ public class GsmCharsetUtil {
     }
 
     /**
-     * Indecates whether provided Strings consists only of GSM 03.38 characters
+     * Indicates whether provided Strings consists only of GSM 03.38 characters
      *
      * @param str String to check
      * @return true - all Strings characters belongs to GSM 03.38, false - not

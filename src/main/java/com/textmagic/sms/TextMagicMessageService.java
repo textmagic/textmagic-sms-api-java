@@ -20,7 +20,7 @@ import java.math.BigDecimal;
 
 /**
  * Java facade for <a href="www.textmagic.com">TextMagic SMS Gateway</a> service.
- * The class provide convient set of methods to access TextMagic http api.
+ * The class provide convenient set of methods to access TextMagic http api.
  * <br/><br/>
  * The class use {@link HttpServiceInvoker} implementation for calling http service
  * and {@link com.textmagic.sms.core.parsing.TextMagicResponseParser} implementation for parsing http api responses
@@ -66,7 +66,7 @@ public class TextMagicMessageService implements MessageService {
     /**
      * Sets alternative HttpServiceInvoker implementation
      *
-     * @param invoker appropriate implementation of {@link com.textmagic.sms.core.invoker.HttpServiceInvoker} to be used in http api calling
+     * @param invoker appropriate implementation of {@link com.textmagic.sms.core.invoker.HttpServiceInvoker} to be used to call http api
      */
     public void setInvoker(HttpServiceInvoker invoker) {
         this.invoker = invoker;
@@ -75,7 +75,7 @@ public class TextMagicMessageService implements MessageService {
     /**
      * Sets alternative TextMagicResponseParser implementation
      *
-     * @param parser appropriate implementation of {@link TextMagicResponseParser} to be used in parsing
+     * @param parser appropriate implementation of {@link TextMagicResponseParser} to be used to parse server response
      */
     public void setParser(TextMagicResponseParser parser) {
         this.parser = parser;
@@ -83,14 +83,14 @@ public class TextMagicMessageService implements MessageService {
 
 
     /**
-     * Covinient shortcut for send(String text, Integer maxLength, boolean useUnicode, List<String> phones) method
+     * Convenient shortcut for send(String text, List<String> phones, Integer maxLength, boolean useUnicode) method
      * maxLength is set to 3. <br/>
-     * Value of useUnicode flag will be set based on whether <tt>text</tt> contains unicode
+     * Value of useUnicode flag will be set based on whether <tt>text</tt> contains Unicode
      * (non GSM 03.38) characters
      *
-     * @param text message body to be sent. max length in case of plain message - 480, in case of unicode message - 210
+     * @param text message body to be sent. max length in case of plain message - 480, in case of Unicode message - 210
      * @param phone the msisdn of the message recipient
-     * @return populated SentMessage dto
+     * @return populated SentMessage DTO
      * @throws ServiceBackendException if server responds with error code
      * @throws ServiceTechnicalException if server is inaccessible or response is unexpected
      * @throws IllegalArgumentException if phone format is invalid, or text length is too long
@@ -99,20 +99,20 @@ public class TextMagicMessageService implements MessageService {
         List<SentMessage> list = send(text, Arrays.asList(phone));
         if (list.size() != 1) {
             throw new ServiceTechnicalException("The server response is unexpected. " +
-                    "The response object is not populated with single result: [" + Arrays.toString(list.toArray()) + "]");
+                    "The response object was not populated with single result: [" + Arrays.toString(list.toArray()) + "]");
         }
         return list.get(0);
     }
 
     /**
-     * Covinient shortcut for send(String text, Integer maxLength, boolean useUnicode, List<String> phones) method
+     * Convenient shortcut for send(String text, List<String> phones, Integer maxLength, boolean useUnicode ) method
      * maxLength is set to 3.<br/>
-     * Value of useUnicode flag will be set based on whether <tt>text</tt> contains unicode
+     * Value of useUnicode flag will be set based on whether <tt>text</tt> contains Unicode
      * (non GSM 03.38) characters
      *
-     * @param text message body to be sent. max length in case of plain message - 480, in case of unicode message - 210
+     * @param text message body to be sent. max length in case of plain message - 480, in case of Unicode message - 210
      * @param phones list of msisdn of the message recipients
-     * @return list of populated {@link SentMessage} dtos
+     * @return list of populated {@link SentMessage} DTOs
      * @throws ServiceBackendException if server responds with error code
      * @throws ServiceTechnicalException if server is inaccessible or response is unexpected
      * @throws IllegalArgumentException if one of phones format is invalid, or text length is too long
@@ -128,28 +128,28 @@ public class TextMagicMessageService implements MessageService {
      * The text can be in 2 formats :
      * <ul>
      * <li> plain text - if all text characters belongs to <a href="http://api.textmagic.com/https-api/supported-character-sets">GSM 03.38 character set</a>
-     * <li> unicode text - can include Arabic, Japanese, Russian, Chinese and other world languages characters
+     * <li> Unicode text - can include Arabic, Japanese, Russian, Chinese and other world languages characters
      * </ul>
      * <br/></br/>
      * One sms message can contain 160 symbols in case of plain text, and 70 in case of unicode.<br/>
      * If the text length is not fit, the text can be divided into parts.<br/>
-     * The <tt>maxLength</tt> parameter provides the ability to set the maximum amount of parts the message can be divided.
-     * Current standart do not supports more than 3 parts.
+     * The <tt>maxLength</tt> parameter provides the ability to set the maximum amount of parts the message can be divided into.
+     * Current standard do not supports more than 3 parts.
      *
      * @param text the message to be sent
-     * @param useUnicode specifies whether message contains non-GSM characters (true) or not (false_
-     * @param maxLength maximum number of parts the text can be divided. accepts 1-3 integer values included
      * @param phones the list of msisdn the message should be sent to
-     * @return list of populated {@link SentMessage} dtos
+     * @param useUnicode specifies whether message contains non-GSM characters (true) or not (false)
+     * @param maxLength maximum number of parts the text can be divided. accepts 1-3 integer values included
+     * @return list of populated {@link SentMessage} DTOs
      * @throws ServiceBackendException if server responds with error code
      * @throws ServiceTechnicalException if server is inaccessible or response is unexpected
      * @throws IllegalArgumentException if one of phones format is invalid, text length is too long, text contains non-GSM characters but useUnicode = false, maxLength in out of bounds
      *
      */
-    public List<SentMessage> send(String text, boolean useUnicode, Integer maxLength, List<String> phones) throws ServiceBackendException,
+    public List<SentMessage> send(String text, List<String> phones, boolean useUnicode, Integer maxLength) throws ServiceBackendException,
             ServiceTechnicalException{
         if(maxLength > 3 || maxLength < 1) {
-            throw new IllegalArgumentException("maxLength valude is invalid");
+            throw new IllegalArgumentException("maxLength value is invalid");
         }
         if(!useUnicode && ! GsmCharsetUtil.isLegalString(text)){
             throw new IllegalArgumentException("Text '" +text + "' contains illegal characters. " +
@@ -159,7 +159,7 @@ public class TextMagicMessageService implements MessageService {
     }
 
     /**
-     * The method for internal use. Do not checks maxLength and unicode params. But do check text length.
+     * The method for internal use. Do not checks validness of maxLength and Unicode parameters. But do check text length.
      *
      * @param text
      * @param maxLength
@@ -195,7 +195,7 @@ public class TextMagicMessageService implements MessageService {
      * Checks whether all phones in provided list have correct msisdn format
      * <br/>
      * The current check is based only on: msisdn is 8-20 digits value<br/>
-     * The method can be overriden if more precise check is needed
+     * The method can be overridden if more precise check is needed
      *
      * @param phones phone numbers to be validated
      * @throws IllegalArgumentException if founds invalid phone number  
@@ -212,7 +212,7 @@ public class TextMagicMessageService implements MessageService {
      * Does main http api calling cycle: calls http service and check whether the response contains error code
      *
      * @param command http api command to be called
-     * @param params the params for http api command
+     * @param params the parameters for http api command
      * @return backend response
      * @throws ResponseParsingException if parser could not determine whether response contains error code
      * @throws ServiceBackendException if http service return error code
@@ -248,7 +248,7 @@ public class TextMagicMessageService implements MessageService {
     }
 
     /**
-     * This is convinient shortcut for <code>messageStatus(List&gtLong&lt messageIds)</code> method 
+     * This is convenient shortcut for <code>messageStatus(List&gtLong&lt messageIds)</code> method 
      *
      * @param messageId id of the message, which status is to be queried
      * @return status of requested message
@@ -268,10 +268,10 @@ public class TextMagicMessageService implements MessageService {
     }
 
     /**
-     * Retrieve list of {@link com.textmagic.sms.dto.MessageStatus} dtos from server
+     * Retrieve list of {@link com.textmagic.sms.dto.MessageStatus} DTOs from server
      *
      * @param messageIds ids of the messages, whose statuses are to be queried
-     * @return list of {@link com.textmagic.sms.dto.MessageStatus} dtos
+     * @return list of {@link com.textmagic.sms.dto.MessageStatus} DTOs
      * @throws ServiceBackendException if server responds with error code
      * @throws ServiceTechnicalException if http service call failed or response is unexpected
      */
@@ -291,7 +291,7 @@ public class TextMagicMessageService implements MessageService {
      * <br/>
      * Please check {@link ReceivedMessage} for definition of inbound sms message
      *
-     * @return list of {@link ReceivedMessage} dtos
+     * @return list of {@link ReceivedMessage} DTOs
      * @throws ServiceBackendException if server responds with error code
      * @throws ServiceTechnicalException if http service call failed or response is unexpected
      */
@@ -305,11 +305,10 @@ public class TextMagicMessageService implements MessageService {
      * Please check {@link ReceivedMessage} for definition of inbound sms message
      *
      * @param lastRecievedId define min value for id of messages to be retrieved
-     * @return list of {@link ReceivedMessage} dtos
+     * @return list of {@link ReceivedMessage} DTOs
      * @throws ServiceBackendException if server responds with error code
      * @throws ServiceTechnicalException if http service call failed or response is unexpected
      */
-
     public List<ReceivedMessage> receive(Long lastRecievedId) throws ServiceBackendException, ServiceTechnicalException {
         Map<String, String> params = new HashMap<String, String>();
         params.put("last_retrieved_id", lastRecievedId.toString());

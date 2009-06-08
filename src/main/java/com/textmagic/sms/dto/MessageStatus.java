@@ -8,10 +8,10 @@ import java.math.BigDecimal;
  *<br/><br/>
  * The main attributes are:
  * <ul>
- * <li> message - the message object, whose status the <tt><MessageStatus/tt> object represent
+ * <li> message - the message object, whose status this <tt><MessageStatus/tt> object represents
  * <li> deliveryState - current state of delivering progress. see {@link com.textmagic.sms.dto.MessageStatus.DeliveryState}
  * <li> createdTime - the {@link Date} when sms was created
- * <li> replyNumber - the phone number (msisdn) the message recipient can reply to. See <a href = "http://api.textmagic.com/https-api/sender-id">Reply options</a>
+ * <li> replyNumber - the phone number (MSISDN) the message recipient can reply to. See <a href = "http://api.textmagic.com/https-api/sender-id">Reply options</a>
  * <li> creditsCost - the cost of the sent message. the value will be provided only if delivering completed (the <tt>deliveryState</tt> is final.)
  * <li> completedTime - the {@link Date} when delivering was completed. the value will be provided only if delivering is over (the <tt>deliveryState</tt> is final)
  * </ul>
@@ -21,7 +21,7 @@ import java.math.BigDecimal;
 public class MessageStatus {
     /**
      * DeliveryState is used to indicate current state of messages being sent through the TextMagic gateway
-     * In addition, unum provide 2 attributes:
+     * In addition, enum provide 2 attributes:
      * <ul>
      * <li> isFinal - if isFinal is false, this means message delivering is in progress, otherwise delivering ended
      * <li> description - user friendly message text explaining current state  
@@ -42,10 +42,18 @@ public class MessageStatus {
         private boolean isFinal;
         private String description;
 
+        /**
+         * getter for isFinal
+         * @return if isFinal is false, this means message delivering is in progress, otherwise delivering ended
+         */
         public boolean isFinal() {
             return isFinal;
         }
 
+        /**
+         * Getter for description
+         * @return user friendly message text explaining current state
+         */
         public String getDescription() {
             return description;
         }
@@ -63,6 +71,10 @@ public class MessageStatus {
     private BigDecimal creditsCost;
     private Date completedTime;
 
+    /**
+     * message object, whose status the <tt><MessageStatus/tt> object represents
+     * @return message object
+     */
     public Message getMessage() {
         return message;
     }
@@ -71,6 +83,10 @@ public class MessageStatus {
         this.message = message;
     }
 
+    /**
+     * current state of delivering progress
+     * @return delivering progress state
+     */
     public DeliveryState getDeliveryState() {
         return deliveryState;
     }
@@ -79,6 +95,10 @@ public class MessageStatus {
         this.deliveryState = deliveryState;
     }
 
+    /**
+     * time when sms was created
+     * @return creation date
+     */
     public Date getCreatedTime() {
         return createdTime;
     }
@@ -87,6 +107,10 @@ public class MessageStatus {
         this.createdTime = createdTime;
     }
 
+    /**
+     * phone number (MSISDN) the message recipient can reply to.
+     * @return the phone number
+     */
     public String getReplyNumber() {
         return replyNumber;
     }
@@ -95,6 +119,10 @@ public class MessageStatus {
         this.replyNumber = replyNumber;
     }
 
+    /**
+     * the cost of the sent message
+     * @return credit cost
+     */
     public BigDecimal getCreditsCost() {
         return creditsCost;
     }
@@ -103,6 +131,10 @@ public class MessageStatus {
         this.creditsCost = creditsCost;
     }
 
+    /**
+     * time when delivering was completed
+     * @return completion time
+     */
     public Date getCompletedTime() {
         return completedTime;
     }

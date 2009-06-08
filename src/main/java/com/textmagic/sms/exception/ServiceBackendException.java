@@ -2,7 +2,7 @@ package com.textmagic.sms.exception;
 
 /**
  * The class <code>ServiceBackendException</code> and its subclasses are a form of
- * <code>ServiceException</code> that indicates coditions where TextMagic server received clients
+ * <code>ServiceException</code> that indicates conditions where TextMagic server received clients
  * request, but could not fulfil it and responded with error code
  * <br/><br/>
  * See <a href="http://api.textmagic.com/https-api/api-error-codes">Api Error Coded</a>
@@ -40,7 +40,7 @@ public class ServiceBackendException extends ServiceException {
 
     @Override
     public String getMessage() {
-        return "Server responsed with error code [ " + errorCode +" - " + errorMessage + " ]";
+        return "Server responded with error code [ " + errorCode +" - " + errorMessage + " ]";
     }
 
 

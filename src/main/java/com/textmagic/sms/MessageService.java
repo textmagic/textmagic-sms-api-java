@@ -22,7 +22,7 @@ public interface MessageService {
 
     public List<SentMessage> send(String text, List<String> phones) throws ServiceBackendException, ServiceTechnicalException;
 
-    public List<SentMessage> send(String text, boolean useUnicode, Integer maxLength, List<String> phones) throws ServiceBackendException, ServiceTechnicalException;
+    public List<SentMessage> send(String text, List<String> phones, boolean useUnicode, Integer maxLength) throws ServiceBackendException, ServiceTechnicalException;
 
     public BigDecimal account() throws ServiceBackendException, ServiceTechnicalException;
 

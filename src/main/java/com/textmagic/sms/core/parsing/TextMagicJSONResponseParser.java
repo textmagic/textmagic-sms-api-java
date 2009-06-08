@@ -39,10 +39,10 @@ public class TextMagicJSONResponseParser implements TextMagicResponseParser {
         codeToStateMap.put ("u", MessageStatus.DeliveryState.Unknown);
     }
 
-    private RawReponseTextConverter textConverter;
+    private RawResponseTextConverter textConverter;
 
     public TextMagicJSONResponseParser() {
-        textConverter = new RawReponseTextConverter();
+        textConverter = new RawResponseTextConverter();
     }
 
     public boolean isFailureResponse(String response) throws ResponseParsingException {
