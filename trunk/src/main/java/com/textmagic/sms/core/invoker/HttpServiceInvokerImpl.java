@@ -29,7 +29,7 @@ import com.textmagic.sms.util.StringUtils;
  *      }
  *  </pre>
  * <br/>
- * To change https to http protocol, one should override {@link textMagicUrl} value 
+ * To change https to http protocol, one should override <code>textMagicUrl<code> value 
  *
  * @author Rafael Bagmanov
  */

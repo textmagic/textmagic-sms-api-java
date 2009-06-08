@@ -24,6 +24,10 @@ public class Message {
         this.text = text;
     }
 
+    /**
+     * getter for the attribute that unambiguously defines any message on server.
+     * @return  primary key.
+     */
     public Long getId() {
         return id;
     }
@@ -32,11 +36,15 @@ public class Message {
         this.id = id;
     }
 
+    /**
+     * getter for sms message content
+     * @return message content
+     */
     public String getText() {
         return text;
     }
 
-    public void setText(String text) {
+     public void setText(String text) {
         this.text = text;
     }
 

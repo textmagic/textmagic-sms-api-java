@@ -16,6 +16,10 @@ public class SentMessage extends Message{
     private String recipientPhone;
     private Short partsCount;
 
+    /**
+     * phone number (msisdn) the message was sent to
+     * @return phone number
+     */
     public String getRecipientPhone() {
         return recipientPhone;
     }
@@ -24,6 +28,10 @@ public class SentMessage extends Message{
         this.recipientPhone = recipientPhone;
     }
 
+    /**
+     * number of parts the message text was divided into
+     * @return number of parts
+     */
     public Short getPartsCount() {
         return partsCount;
     }

@@ -9,14 +9,14 @@ import java.util.List;
 import java.math.BigDecimal;
 
 /**
- * <code>TextMagicResponseParser</code> is parser of TextMagic Gateway Http Api response   
+ * <code>TextMagicResponseParser</code> is parser of TextMagic Gateway Http API response   
  * Class provides a set of methods for parsing responses of all gateway commands
  *
  * @author Rafael Bagmanov
  */
 public interface TextMagicResponseParser {
     /**
-     * Checks whether reponse contains failue error code
+     * Checks whether response contains failure error code
      *
      * @param response http api response body
      * @return true - if response contains error code, false - otherwise
@@ -34,10 +34,10 @@ public interface TextMagicResponseParser {
     public ServiceBackendException parseFailureResponse(String response) throws ResponseParsingException;
 
     /**
-     * Constructs list of {@link SentMessage} dtos from 'send' command http response body
+     * Constructs list of {@link SentMessage} DTOs from 'send' command http response body
      *
      * @param response 'send' command http response body
-     * @return list of SendMessage dtos
+     * @return list of SendMessage DTOs
      * @throws ResponseParsingException if <tt>response</tt> could not be parsed
      */
     public List<SentMessage> parseSendResponse(String response) throws ResponseParsingException;
@@ -52,19 +52,19 @@ public interface TextMagicResponseParser {
     public BigDecimal parseAccountResponse(String response) throws ResponseParsingException;
 
     /**
-     * Constructs list of {@link MessageStatus} dtos from 'message_status' command http response body
+     * Constructs list of {@link MessageStatus} DTOs from 'message_status' command http response body
      *
      * @param response 'message_status' command http response body
-     * @return parsing result as list of MessageStatus dtos
+     * @return parsing result as list of MessageStatus DTOs
      * @throws ResponseParsingException if <tt>response</tt> could not be parsed
      */
     public List<MessageStatus> parseMessageStatusResponse(String response) throws ResponseParsingException;
 
     /**
-     * Constructs list of {@link com.textmagic.sms.dto.ReceivedMessage} dtos from 'receive' command http response body
+     * Constructs list of {@link com.textmagic.sms.dto.ReceivedMessage} DTOs from 'receive' command http response body
      *
      * @param response 'receive' command http response body
-     * @return list of {@link com.textmagic.sms.dto.ReceivedMessage} dtos
+     * @return list of {@link com.textmagic.sms.dto.ReceivedMessage} DTOs
      * @throws ResponseParsingException if <tt>response</tt> could not be parsed
      */
     public List<ReceivedMessage> parseReceiveResponse(String response) throws ResponseParsingException;

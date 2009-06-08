@@ -10,7 +10,7 @@ import java.util.Map;
  */
 public class StringUtils {
 
-    private StringUtils(){};
+    private StringUtils(){}
 
     /**
      * Joins string representations of all objects from list into one String
@@ -29,7 +29,7 @@ public class StringUtils {
     }
 
     /**
-     * Constructs a string as a result of <tt>count</tt> repetiotion of <tt>str</tt> string fragment
+     * Constructs a string as a result of <tt>count</tt> repetition of <tt>str</tt> string fragment
      *
      * @param str the string fragment to be repeated
      * @param count repetition count
