@@ -40,7 +40,7 @@ SentMessage message = service.send("text", "9991234567");
 
 Lets write jsp page for sending sms messages containing 2 form fields: destination number and message text to be sent. Lets name it "send.jsp"
 
-NOTE: All examples in the tutorial do not contain neccessary headers and import statements. Please download full working example archive at the end of this tutorial
+NOTE: All examples in the tutorial do not contain necessary headers and import statements. Please download full working example archive at the end of this tutorial
 
 {{{
 <h2>Sending Message Example</h2>
@@ -135,7 +135,7 @@ Lets write simple check_state.jsp page, that will receive http get "id" paramete
 %>
 }}}
 
-Now, we need a link to this page, wich will provide appropriate message id parameter to requests.
+Now, we need a link to this page, which will provide appropriate message id parameter to requests.
 
 Lets revisit send.jsp page to add this link
 {{{
@@ -178,7 +178,7 @@ for deleting message message from server.
 
 Note: we don't cover bulk api methods that operates with sets of messages
 
-Lets write receive.jsp page that will retreive all inbound message from server and represent them in a simple table. In addition, lets add facility to remove exact messages from server (note: removed messages can not be restored)
+Lets write receive.jsp page that will retrieve all inbound message from server and represent them in a simple table. In addition, lets add facility to remove exact messages from server (note: removed messages can not be restored)
 
 {{{
 
@@ -229,7 +229,7 @@ Lets write receive.jsp page that will retreive all inbound message from server a
             }
 	} catch (ServiceException ex) {
 %>
-            <font color="red">Couldn't receve inbound messages. Reason : <%= ex.getMessage() %></font>
+            <font color="red">Couldn't receive inbound messages. Reason : <%= ex.getMessage() %></font>
 <%		
 	}
 %>
@@ -240,7 +240,7 @@ Lets write receive.jsp page that will retreive all inbound message from server a
 
 [http://textmagic-sms-api-java.googlecode.com/files/demo.war Download]
 
-Here we provide sample application, packaged in standart java web application archive.
+Here we provide sample application, packaged in standard java web application archive.
 
 As far as it contains only jsp pages, no separate sources are provided.
 
