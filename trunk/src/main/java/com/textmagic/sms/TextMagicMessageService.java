@@ -3,6 +3,7 @@ package com.textmagic.sms;
 import com.textmagic.sms.dto.SentMessage;
 import com.textmagic.sms.dto.MessageStatus;
 import com.textmagic.sms.dto.ReceivedMessage;
+import com.textmagic.sms.dto.PhoneInfo;
 import com.textmagic.sms.exception.ServiceBackendException;
 import com.textmagic.sms.exception.ServiceTechnicalException;
 import com.textmagic.sms.core.invoker.HttpServiceInvoker;
@@ -40,6 +41,7 @@ public class TextMagicMessageService implements MessageService {
     private static final String MESSAGE_STATUS_COMMAND = "message_status";
     private static final String RECEIVE_COMMAND = "receive";
     private static final String DELETE_REPLY_COMMAND = "delete_reply";
+    private static final String CHECK_NUMBER_COMMAND = "check_number";
 
     private String login;
     private String password;
@@ -262,7 +264,7 @@ public class TextMagicMessageService implements MessageService {
         }
         if(list.size() > 1){
             throw new ServiceTechnicalException("The server response is unexpected. " +
-                    "The response object is not populated with single result: [" + Arrays.toString(list.toArray()) + "]");
+                    "The response object was not populated with single result: [" + Arrays.toString(list.toArray()) + "]");
         }
         return list.get(0);
     }
@@ -353,8 +355,44 @@ public class TextMagicMessageService implements MessageService {
         List<Long> list = deleteReply(Arrays.asList(messageId));
         if(list.size() != 1){
             throw new ServiceTechnicalException("The server response is unexpected. " +
-                    "The response object is not populated with single result: [" + Arrays.toString(list.toArray()) + "]");
+                    "The response object was not populated with single result: [" + Arrays.toString(list.toArray()) + "]");
         }
         return list.get(0);
+    }
+
+    /**
+     * Validate phone number format, check message price to this destination and tells about phone's country code.
+     *
+     * @param phone MSISDN number to check
+     * @return {@link PhoneInfo} DTOs
+     * @throws ServiceBackendException  if server responds with error code
+     * @throws ServiceTechnicalException if http service call failed or response is unexpected
+     */
+    public PhoneInfo checkNumber(String phone) throws ServiceBackendException, ServiceTechnicalException {
+        List<PhoneInfo> list = checkNumbers(Arrays.asList(phone));
+        if(list.size() != 1){
+            throw new ServiceTechnicalException("The server response is unexpected. " +
+                "The response object was not populated with single result: [" + Arrays.toString(list.toArray()) + "]");
+        }
+        return list.get(0);
+    }
+
+    /**
+     * Validate phone numbers format, get message prices to these destinations and tells about phones country codes.
+     *
+     * @param phones MSISDNs to check
+     * @return list of {@link PhoneInfo} DTOs
+     * @throws ServiceBackendException  if server responds with error code
+     * @throws ServiceTechnicalException if http service call failed or response is unexpected
+     */
+    public List<PhoneInfo> checkNumbers(List<String> phones) throws ServiceBackendException, ServiceTechnicalException {
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("phone", StringUtils.join(phones, ","));
+        try {
+            String response = invoke(CHECK_NUMBER_COMMAND, params);
+            return parser.parseCheckNumberResponse(response);
+        } catch (ResponseParsingException ex) {
+            throw new ServiceTechnicalException(ex.getMessage(), ex);
+        }
     }
 }
