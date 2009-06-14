@@ -8,6 +8,7 @@ import com.textmagic.sms.exception.ServiceBackendException;
 import com.textmagic.sms.dto.SentMessage;
 import com.textmagic.sms.dto.MessageStatus;
 import com.textmagic.sms.dto.ReceivedMessage;
+import com.textmagic.sms.dto.PhoneInfo;
 
 import java.util.List;
 import java.util.Date;
@@ -110,14 +111,14 @@ public class TextResponseParserImplTest {
                 "\"created_time\":\"1242937000\"," +
                 "\"reply_number\":\"987654\"," +
                 "\"completed_time\":null," +
-                "\"credits_cost\":\"0.5\"}," +
+                "\"credits_cost\":0.5}," +
                 "\"2\":" +
                 "{\"text\":\"message2\"," +
                 "\"status\":\"j\"," +
                 "\"created_time\":\"1234567\"," +
                 "\"reply_number\":\"12345\"," +
                 "\"completed_time\": \"111111\"," +
-                "\"credits_cost\":\"6.5\"}," +
+                "\"credits_cost\":6.5}," +
                 "}";
 
         List<MessageStatus> result = parser.parseMessageStatusResponse(json);
@@ -156,7 +157,7 @@ public class TextResponseParserImplTest {
                   "\"created_time\":\"1242937000\"," +
                   "\"reply_number\":\"987654\"," +
                   "\"completed_time\":null," +
-                  "\"credits_cost\":\"0.5\"}" +
+                  "\"credits_cost\":0.5}" +
                   "}";
 
        List<MessageStatus> result = parser.parseMessageStatusResponse(json);
@@ -186,7 +187,7 @@ public class TextResponseParserImplTest {
                   "\"created_time\":\"12429a37000\"," +
                   "\"reply_number\":\"9876a54\"," +
                   "\"completed_time\":null," +
-                  "\"credits_cost\":\"0.5\"}" +
+                  "\"credits_cost\":0.5}" +
                   "}";
         parser.parseMessageStatusResponse(json);
     }
@@ -242,8 +243,43 @@ public class TextResponseParserImplTest {
 
     @Test(expected = ResponseParsingException.class)
     public void testParseDeleteReplyResponse_WrongResponse() throws Exception{
-        parser.parseDeleteReplyResponse("{\"balance\":\"50\"}");
+        parser.parseDeleteReplyResponse("{\"balance\":50}");
+    }
 
+    @Test
+    public void testParseCheckNumberResponse() throws Exception{
+        String json = "{\"447123456789\":{\n" +
+                "                 \"price\":0.8,\n" +
+                "                 \"country\":\"GB\"\n" +
+                "                }\n" +
+                "}";
+        List<PhoneInfo> result = parser.parseCheckNumberResponse(json);
+        assertEquals(1, result.size());
+        assertEquals("447123456789", result.get(0).getPhone());
+        assertEquals(new BigDecimal(0.8).doubleValue(), result.get(0).getPrice().doubleValue(), 0.00001);
+        assertEquals("GB", result.get(0).getCoutryCode());
+
+    }
+
+    @Test(expected = ResponseParsingException.class)
+    public void testParseCheckNumberResponse_WrongPrice() throws Exception{
+        String json = "{\"447123456789\":{\n" +
+                "                 \"price\":wrong,\n" +
+                "                 \"country\":\"GB\"\n" +
+                "                }\n" +
+                "}";
+        parser.parseCheckNumberResponse(json);
+    }
+
+    @Test(expected = ResponseParsingException.class)
+    public void testParseCheckNumberResponse_InvalidJSON() throws Exception{
+        String json = "{\"447123456789\":{\n" +
+                "                 \"price\":wrong,\n" +
+                "                 \"country\":\"GB\"\n" +
+                "                }\n," +
+                "447123456789:" +
+                "}";
+        parser.parseCheckNumberResponse(json);
     }
 
 

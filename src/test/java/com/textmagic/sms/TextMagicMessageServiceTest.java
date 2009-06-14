@@ -13,10 +13,7 @@ import com.textmagic.sms.core.invoker.HttpServiceInvoker;
 import com.textmagic.sms.core.invoker.ServiceInvokerException;
 import com.textmagic.sms.core.parsing.TextMagicResponseParser;
 import com.textmagic.sms.core.parsing.ResponseParsingException;
-import com.textmagic.sms.dto.SentMessage;
-import com.textmagic.sms.dto.MessageStatus;
-import com.textmagic.sms.dto.Message;
-import com.textmagic.sms.dto.ReceivedMessage;
+import com.textmagic.sms.dto.*;
 import com.textmagic.sms.exception.ServiceTechnicalException;
 import com.textmagic.sms.exception.ServiceBackendException;
 import com.textmagic.sms.util.StringUtils;
@@ -401,6 +398,7 @@ public class TextMagicMessageServiceTest {
         Long result = service.deleteReply(1L);
         assertEquals(1L, result.longValue());
     }
+
     @Test (expected = ServiceTechnicalException.class)
     public void testDeleteReply_ServiceInvokerException() throws Exception {
         final String invokerResponse = "dummy response";
@@ -415,6 +413,46 @@ public class TextMagicMessageServiceTest {
             ); will(throwException(new ServiceInvokerException("")));
         }});
         Long result = service.deleteReply(1L);
+    }
+
+    @Test
+    public void testCheckNumbers() throws Exception {
+        final String invokerResponse = "dummy response";
+
+        final List<PhoneInfo> checkNumerResponse = new ArrayList<PhoneInfo>();
+
+        context.checking(new Expectations() {{
+            one(serviceInvoker).invoke(
+                    with(equalTo(LOGIN)),
+                    with(equalTo(PASSWORD)),
+                    with(equalTo("check_number")),
+                    with(Matchers.hasEntry("phone", "12,23,34"))
+            ); will(returnValue(invokerResponse));
+            one(responseParser).isFailureResponse(invokerResponse); will(returnValue(false));
+            one(responseParser).parseCheckNumberResponse(invokerResponse); will(returnValue(checkNumerResponse));
+        }});
+        List<PhoneInfo> result = service.checkNumbers(Arrays.asList("12", "23", "34"));
+        assertEquals(checkNumerResponse, result);
+    }
+
+    @Test
+    public void testCheckNumber() throws Exception {
+        final String invokerResponse = "dummy response";
+
+        final List<PhoneInfo> checkNumerResponse = Arrays.asList(new PhoneInfo());
+
+        context.checking(new Expectations() {{
+            one(serviceInvoker).invoke(
+                    with(equalTo(LOGIN)),
+                    with(equalTo(PASSWORD)),
+                    with(equalTo("check_number")),
+                    with(Matchers.hasEntry("phone", "12"))
+            ); will(returnValue(invokerResponse));
+            one(responseParser).isFailureResponse(invokerResponse); will(returnValue(false));
+            one(responseParser).parseCheckNumberResponse(invokerResponse); will(returnValue(checkNumerResponse));
+        }});
+        PhoneInfo result = service.checkNumber("12");
+        assertEquals(checkNumerResponse.get(0), result);
     }
 
 

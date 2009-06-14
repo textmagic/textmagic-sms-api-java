@@ -3,6 +3,7 @@ package com.textmagic.sms.core.parsing;
 import com.textmagic.sms.dto.SentMessage;
 import com.textmagic.sms.dto.MessageStatus;
 import com.textmagic.sms.dto.ReceivedMessage;
+import com.textmagic.sms.dto.PhoneInfo;
 import com.textmagic.sms.exception.ServiceBackendException;
 
 import java.util.List;
@@ -77,4 +78,13 @@ public interface TextMagicResponseParser {
      * @throws ResponseParsingException if <tt>response</tt> could not be parsed
      */
     public List<Long> parseDeleteReplyResponse(String response) throws ResponseParsingException;
+
+    /**
+     * Constructs list of deleted reply messages IDs from 'delete_reply' command http response body
+     *
+     * @param response 'check_number' command http response body
+     * @return list of {@link com.textmagic.sms.dto.PhoneInfo} DTOs
+     * @throws ResponseParsingException if <tt>response</tt> could not be parsed
+     */
+    public List<PhoneInfo> parseCheckNumberResponse(String response) throws ResponseParsingException;
 }

@@ -1,10 +1,7 @@
 package com.textmagic.sms.core.parsing;
 
 import com.textmagic.sms.exception.ServiceBackendException;
-import com.textmagic.sms.dto.SentMessage;
-import com.textmagic.sms.dto.MessageStatus;
-import com.textmagic.sms.dto.ReceivedMessage;
-import com.textmagic.sms.dto.Message;
+import com.textmagic.sms.dto.*;
 
 import java.util.*;
 import java.math.BigDecimal;
@@ -190,5 +187,27 @@ public class TextMagicJSONResponseParser implements TextMagicResponseParser {
             throw new ResponseParsingException("Couldn't determine whether response '" + response + "' contains error code", e);
         }
 
+    }
+
+    public List<PhoneInfo> parseCheckNumberResponse(String response) throws ResponseParsingException {
+        try {
+            List<PhoneInfo> phoneInfos = new ArrayList<PhoneInfo>();
+            JSONObject responseObject = new JSONObject(response);
+            Iterator<String> phoneInfoIterator = responseObject.keys();
+            while(phoneInfoIterator.hasNext()){
+                String phone = phoneInfoIterator.next();
+                JSONObject infoJSON = responseObject.getJSONObject(phone);
+                PhoneInfo info = new PhoneInfo();
+                info.setPhone(phone);
+                info.setCoutryCode(infoJSON.getString("country"));
+                info.setPrice(new BigDecimal(infoJSON.getString("price")));
+                phoneInfos.add(info);
+            }
+            return phoneInfos;
+        } catch (JSONException e) {
+            throw new ResponseParsingException("Couldn't parse '" + response + "' as gateway 'check_number' response", e);
+        } catch (NumberFormatException e){
+            throw new ResponseParsingException("Couldn't parse '" + response + "' as gateway 'check_number' response", e);
+        }
     }
 }

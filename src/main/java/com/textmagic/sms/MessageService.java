@@ -3,6 +3,7 @@ package com.textmagic.sms;
 import com.textmagic.sms.dto.ReceivedMessage;
 import com.textmagic.sms.dto.MessageStatus;
 import com.textmagic.sms.dto.SentMessage;
+import com.textmagic.sms.dto.PhoneInfo;
 import com.textmagic.sms.exception.ServiceBackendException;
 import com.textmagic.sms.exception.ServiceTechnicalException;
 
@@ -38,5 +39,8 @@ public interface MessageService {
 
     public Long deleteReply(Long messageId) throws ServiceBackendException, ServiceTechnicalException;
 
+    public PhoneInfo checkNumber(String phone) throws ServiceBackendException, ServiceTechnicalException;
+
+    public List<PhoneInfo> checkNumbers(List<String> phones) throws ServiceBackendException, ServiceTechnicalException;
 
 }
