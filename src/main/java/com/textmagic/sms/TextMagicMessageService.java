@@ -121,7 +121,7 @@ public class TextMagicMessageService implements MessageService {
      */
     public List<SentMessage> send(String text, List<String> phones) throws ServiceBackendException, ServiceTechnicalException{
         boolean useUnicode = !GsmCharsetUtil.isLegalString(text);
-        return sendInternal(text, MAX_SMS_PARTS_COUNT, useUnicode, phones);
+        return sendInternal(text, MAX_SMS_PARTS_COUNT, useUnicode, phones, Collections.EMPTY_MAP);
     }
 
     /**
@@ -157,7 +157,32 @@ public class TextMagicMessageService implements MessageService {
             throw new IllegalArgumentException("Text '" +text + "' contains illegal characters. " +
                     "Consider calling 'send' with useUnicode=true");
         }
-        return sendInternal(text, maxLength, useUnicode, phones);
+        return sendInternal(text, maxLength, useUnicode, phones, Collections.EMPTY_MAP);
+    }
+
+    /**
+     * Schedule sms message sending with <tt>text</tt> body to phones specified at exact time.
+     *
+     * @param text the message to be sent
+     * @param phones the list of msisdn the message should be sent to
+     * @param sendingTime exact time when the message should be sent to provided phones. Must point to the future
+     * @param maxLength maximum number of parts the text can be divided. accepts 1-3 integer values included
+     * @return list of populated {@link SentMessage} DTOs
+     * @throws ServiceBackendException if server responds with error code
+     * @throws ServiceTechnicalException if server is inaccessible or response is unexpected
+     * @throws IllegalArgumentException if one of phones format is invalid, text length is too long, maxLength in out of bounds, sendingTime is in the past
+     *
+     */
+    public List<SentMessage> scheduleMessageSending(String text, List<String> phones, Date sendingTime, Integer maxLength) throws ServiceTechnicalException, ServiceBackendException {
+        if(maxLength > 3 || maxLength < 1) {
+            throw new IllegalArgumentException("maxLength value is invalid");
+        }
+        if (sendingTime.getTime() < System.currentTimeMillis()) {
+            throw new IllegalArgumentException("Provided sendingTime value [" + sendingTime.toString() + "] is in the past");
+        }
+        boolean useUnicode = !GsmCharsetUtil.isLegalString(text);
+        return sendInternal(text, maxLength, useUnicode, phones,
+                Collections.singletonMap("send_time", String.valueOf(sendingTime.getTime())));
     }
 
     /**
@@ -171,7 +196,7 @@ public class TextMagicMessageService implements MessageService {
      * @throws ServiceBackendException
      * @throws ServiceTechnicalException
      */
-    protected List<SentMessage> sendInternal(String text, Integer maxLength, boolean useUnicode, List<String> phones) throws ServiceBackendException, ServiceTechnicalException {
+    protected List<SentMessage> sendInternal(String text, Integer maxLength, boolean useUnicode, List<String> phones, Map<String, String> auxValues) throws ServiceBackendException, ServiceTechnicalException {
         int smsPartLength = useUnicode ? MAX_UNICODE_SMS_TEXT_LENGTH : MAX_PLAIN_SMS_TEXT_LENGTH;
         if (smsPartLength * maxLength < text.length()) {
             throw new IllegalArgumentException("Message text length is too long.");
@@ -182,6 +207,7 @@ public class TextMagicMessageService implements MessageService {
         params.put("phone", StringUtils.join(phones, ","));
         params.put("unicode", useUnicode ? "1" : "0");
         params.put("max_length", maxLength.toString());
+        params.putAll(auxValues);
         try {
             String response = invoke(SEND_COMMAND, params);
             return parser.parseSendResponse(response);

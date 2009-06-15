@@ -192,6 +192,39 @@ public class TextMagicMessageServiceTest {
     }
 
     @Test
+    public void testScheduleSending () throws Exception{
+        final String text = "это настоящий русский текст";
+        final String invokerResponse = "dummy response";
+        final List<SentMessage> parseResult = Collections.emptyList();
+        final Date sendTime = new Date(System.currentTimeMillis() + 10000L);
+        context.checking(new Expectations() {{
+            one(serviceInvoker).invoke(
+                    with(equalTo(LOGIN)),
+                    with(equalTo(PASSWORD)),
+                    with(equalTo("send")),
+                    with(allOf(
+                            Matchers.hasEntry("text", text),
+                            Matchers.hasEntry("unicode", "1"),
+                            Matchers.hasEntry("max_length", "3"),
+                            Matchers.hasEntry("phone", CORRECT_MSISDN),
+                            Matchers.hasEntry("send_time", String.valueOf(sendTime.getTime()))
+
+                    ))
+            ); will(returnValue(invokerResponse));
+            one(responseParser).isFailureResponse(invokerResponse); will(returnValue(false));
+            one(responseParser).parseSendResponse(invokerResponse);will(returnValue(parseResult));
+        }});
+        service.scheduleMessageSending(text, Arrays.asList(CORRECT_MSISDN), sendTime, 3);
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void testScheduleSending_IllegalArgumentException_TimeInPast () throws Exception{
+        final String text = "это настоящий русский текст";
+        service.scheduleMessageSending(text, Arrays.asList(CORRECT_MSISDN), new Date(System.currentTimeMillis() - 100), 3);
+    }
+
+
+    @Test
     public void testAccount() throws Exception {
         final String invokerResponse = "dummy response";
         final ServiceBackendException backendExc = new ServiceBackendException(1,"2");

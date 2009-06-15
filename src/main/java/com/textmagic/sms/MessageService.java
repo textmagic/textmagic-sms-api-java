@@ -9,6 +9,7 @@ import com.textmagic.sms.exception.ServiceTechnicalException;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Date;
 
 /**
  * <code>MessageService</code> is just a developer-friendly interface of {@link com.textmagic.sms.TextMagicMessageService}
@@ -24,6 +25,8 @@ public interface MessageService {
     public List<SentMessage> send(String text, List<String> phones) throws ServiceBackendException, ServiceTechnicalException;
 
     public List<SentMessage> send(String text, List<String> phones, boolean useUnicode, Integer maxLength) throws ServiceBackendException, ServiceTechnicalException;
+
+    public List<SentMessage> scheduleMessageSending(String text, List<String> phones, Date sendingTime, Integer maxLength) throws ServiceTechnicalException, ServiceBackendException;
 
     public BigDecimal account() throws ServiceBackendException, ServiceTechnicalException;
 
